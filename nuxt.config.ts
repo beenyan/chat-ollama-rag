@@ -61,7 +61,7 @@ export default defineNuxtConfig({
     icons: ['heroicons', 'iconoir', 'material-symbols', 'mdi', 'svg-spinners']
   },
   css: [
-    '~/assets/index.scss',
+    '~/assets/index.scss', "v-calendar/dist/style.css"
   ],
   app: {
     head: {
@@ -81,6 +81,7 @@ export default defineNuxtConfig({
       title: APP_NAME,
     }
   },
+  plugins: ["~/plugins/chart.ts"],
   runtimeConfig: {
     public: {
       kb: {

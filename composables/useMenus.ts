@@ -10,6 +10,7 @@ export function useMenus() {
     { label: t('menu.instructions'), icon: 'i-iconoir-terminal', to: '/instructions' },
     { label: t('menu.knowledgeBases'), icon: 'i-heroicons-book-open', to: '/knowledgebases' },
     { label: t('menu.chat'), icon: 'i-iconoir-chat-lines', to: '/chat' },
+    { label: t('menu.stock'), icon: 'i-iconoir-activity', to: '/stock' },
     { label: t('menu.settings'), icon: 'i-heroicons-cog-6-tooth', to: '/settings' }
   ])
 }
