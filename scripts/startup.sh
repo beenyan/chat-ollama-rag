@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # Guarantee that the database schema is up-to-date with Prisma schema
+cd /app
 pnpm run prisma-deploy
 
 if [ -f /app/.env ]; then

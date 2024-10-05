@@ -1,4 +1,10 @@
 services:
+  server:
+    build: .
+    ports:
+      - "4500:3000"
+    restart: always
+
   chromadb:
     image: chromadb/chroma
     ports:
