@@ -1,6 +1,7 @@
 import type { SetRequired } from 'type-fest'
 import type { ChatMessage } from '~/types/chat'
 import type { clientDB, ChatHistory } from '~/composables/clientDB'
+import { type News } from '~/types/news'
 
 type RelevantDocument = Required<ChatHistory>['relevantDocs'][number]
 type ResponseRelevantDocument = { type: 'relevant_documents', relevant_documents: RelevantDocument[] }
@@ -16,8 +17,13 @@ interface RequestData {
   timestamp: number
 }
 
+interface BackendRequestData extends RequestData {
+  news: Array<News>
+}
+
 export type WorkerReceivedMessage =
   | { type: 'request', uid: number, data: RequestData, headers: Record<string, any> }
+  | { type: 'backend', uid: number, data: BackendRequestData, headers: Record<string, any> }
   | { type: 'abort', uid?: number, sessionId: number }
 
 export type WorkerSendMessage = { uid: number, sessionId: number, id: number, } & (
@@ -27,6 +33,17 @@ export type WorkerSendMessage = { uid: number, sessionId: number, id: number, } 
   | { type: 'complete' }
   | { type: 'abort' }
 )
+
+const NewsToSourceNode = (news: News) => {
+  return {
+    metadata: {
+      headline: news.title,
+      author: news.source,
+      time: news.date
+    },
+    text: news.content
+  }
+}
 
 const MODEL_FAMILY_SEPARATOR = '/'
 
@@ -44,6 +61,40 @@ function sendMessageToMain(data: WorkerSendMessage) {
 function parseModelValue(val: string) {
   const [family, ...parts] = val.split(MODEL_FAMILY_SEPARATOR)
   return { family, name: parts.join(MODEL_FAMILY_SEPARATOR) }
+}
+
+async function fetchQuerySummary(text: string, news: Array<News>) {
+  const url = `http://140.125.45.129:5000/api/query/summary?text=${text}`
+  const body = JSON.stringify({
+    source_nodes: news.map(news => NewsToSourceNode(news))
+  })
+  const response = await fetch(url, {
+    method: 'POST',
+    body,
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  return await response.json() as { response: string }
+}
+
+async function chatRequestCustom(uid: number, data: BackendRequestData) {
+  const text = data.messages[data.messages.length - 1].content
+  const response = await fetchQuerySummary(text, data.news)
+  const message = response.response
+  const id = await addToDB({
+    sessionId: data.sessionId,
+    role: 'assistant',
+    message,
+    model: data.model,
+    knowledgeBaseId: data.knowledgebaseId,
+    failed: true,
+    canceled: false,
+    startTime: data.timestamp,
+    endTime: Date.now(),
+  })
+
+  sendMessageToMain({ uid, type: 'error', sessionId: data.sessionId, id, message })
+  sendMessageToMain({ id, uid, sessionId: data.sessionId, type: 'complete' })
 }
 
 async function chatRequest(uid: number, data: RequestData, headers: Record<string, any>) {
@@ -90,6 +141,7 @@ async function chatRequest(uid: number, data: RequestData, headers: Record<strin
       startTime: data.timestamp,
       endTime: Date.now(),
     })
+
     sendMessageToMain({ uid, type: 'error', sessionId: data.sessionId, id, message: errInfo })
     sendMessageToMain({ id, uid, sessionId: data.sessionId, type: 'complete' })
   } else if (response.body) {
@@ -187,6 +239,7 @@ async function chatRequest(uid: number, data: RequestData, headers: Record<strin
     })
     sendMessageToMain({ id, uid, sessionId: data.sessionId, type: 'complete' })
   }
+
   abortHandlerMap.delete(`${data.sessionId}:${uid}`)
 }
 
@@ -208,6 +261,9 @@ async function updateToDB(data: SetRequired<Partial<ChatHistory>, 'id'>) {
 
 self.addEventListener('message', (e: MessageEvent<WorkerReceivedMessage>) => {
   const data = e.data
+  if (data.type === 'backend') {
+    chatRequestCustom(data.uid, data.data)
+  }
   if (data.type === 'request') {
     chatRequest(data.uid, data.data, data.headers)
   } else if (data.type === 'abort') {

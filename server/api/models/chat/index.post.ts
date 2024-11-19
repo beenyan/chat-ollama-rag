@@ -67,6 +67,7 @@ export default defineEventHandler(async (event) => {
 
   if (knowledgebaseId) {
     console.log("Chat with knowledge base with id: ", knowledgebaseId)
+
     const knowledgebase = await prisma.knowledgeBase.findUnique({
       where: {
         id: knowledgebaseId,

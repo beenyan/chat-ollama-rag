@@ -93,6 +93,7 @@ const LLMList = computed<LLMListItem[]>(() => {
   ]
 })
 
+
 const currentLLM = ref(LLMList.value[0].key)
 const currentLLMFields = computed(() => LLMList.value.find(el => el.key === currentLLM.value)?.fields || [])
 const state = reactive(getData())

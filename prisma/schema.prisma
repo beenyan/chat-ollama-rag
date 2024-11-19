@@ -80,3 +80,12 @@ model StockNew {
   stock_id Int
   title    String
 }
+
+model StockNews {
+  id       Int    @id @default(autoincrement())
+  stock_id Int
+  date     String
+  source   String
+  title    String
+  content  String
+}

@@ -130,10 +130,11 @@ export const createChatModel = (modelName: string, family: string, event: H3Even
     return initChat(family, modelName, data)!
   }
 
-  const customModel = keys.custom.find(el => el.name === family)
-  if (customModel && MODEL_FAMILIES.hasOwnProperty(customModel.aiType)) {
-    return initChat(MODEL_FAMILIES[customModel.aiType as keyof typeof MODEL_FAMILIES], modelName, customModel, true)!
-  }
+  // Bug
+  // const customModel = keys.custom.find(el => el.name === family)
+  // if (customModel && MODEL_FAMILIES.hasOwnProperty(customModel.aiType)) {
+  //   return initChat(MODEL_FAMILIES[customModel.aiType as keyof typeof MODEL_FAMILIES], modelName, customModel, true)!
+  // }
 
   console.log("Chat with Ollama, Host:", keys.ollama.endpoint)
   return new ChatOllama({
