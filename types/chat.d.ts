@@ -7,4 +7,5 @@ export interface ChatMessage {
   startTime: number
   endTime: number
   relevantDocs?: RelevantDocument[]
+  relevantNews?: SourceNodes[]
 }

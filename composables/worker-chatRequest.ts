@@ -7,6 +7,21 @@ type RelevantDocument = Required<ChatHistory>['relevantDocs'][number]
 type ResponseRelevantDocument = { type: 'relevant_documents', relevant_documents: RelevantDocument[] }
 type ResponseMessage = { message: { role: string, content: string } }
 
+export interface SourceNodes {
+  metadata: {
+    headline: String,
+    author: String,
+    time: String
+  }
+  text: String
+  score: number
+}
+
+interface ResponseData {
+  source_nodes: Array<SourceNodes>,
+  response: string
+}
+
 interface RequestData {
   sessionId: number
   knowledgebaseId?: number
@@ -29,7 +44,7 @@ export type WorkerReceivedMessage =
 export type WorkerSendMessage = { uid: number, sessionId: number, id: number, } & (
   | { type: 'message', data: ChatMessage }
   | { type: 'relevant_documents', data: ChatMessage }
-  | { type: 'error', message: string }
+  | { type: 'error', message: string, data?: ChatMessage }
   | { type: 'complete' }
   | { type: 'abort' }
 )
@@ -74,7 +89,7 @@ async function fetchQuerySummary(text: string, news: Array<News>) {
     headers: { 'Content-Type': 'application/json' },
   })
 
-  return await response.json() as { response: string }
+  return await response.json() as ResponseData
 }
 
 async function chatRequestCustom(uid: number, data: BackendRequestData) {
@@ -91,9 +106,19 @@ async function chatRequestCustom(uid: number, data: BackendRequestData) {
     canceled: false,
     startTime: data.timestamp,
     endTime: Date.now(),
+    relevantNews: response.source_nodes
   })
 
-  sendMessageToMain({ uid, type: 'error', sessionId: data.sessionId, id, message })
+  const result: ChatMessage = {
+    role: 'assistant' as const,
+    model: data.model,
+    content: message,
+    startTime: data.timestamp,
+    endTime: Date.now(),
+    relevantNews: response.source_nodes
+  }
+
+  sendMessageToMain({ uid, type: 'error', sessionId: data.sessionId, id, message, data: result })
   sendMessageToMain({ id, uid, sessionId: data.sessionId, type: 'complete' })
 }
 
@@ -252,6 +277,7 @@ async function updateToDB(data: SetRequired<Partial<ChatHistory>, 'id'>) {
     .equals(data.id)
     .modify({
       relevantDocs: data.relevantDocs,
+      relevantNews: data.relevantNews,
       canceled: data.canceled,
       failed: data.failed,
       message: data.message,

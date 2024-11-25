@@ -65,6 +65,7 @@ watch(() => props.showToggleButton, (value) => {
           <div class="p-3 overflow-hidden">
             <div v-html="markdown.render(message.content || '')" class="md-body" :class="{ 'line-clamp-3 max-h-[5rem]': !opened }" />
             <Sources v-show="opened" :relevant_documents="message?.relevantDocs || []" />
+            <SourcesNews v-show="opened" :relevant_news="message?.relevantNews || []" />
           </div>
           <MessageToggleCollapseButton v-if="showToggleButton" :opened="opened" @click="opened = !opened" />
         </template>

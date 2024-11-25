@@ -1,4 +1,5 @@
 import Dexie, { type Table } from 'dexie'
+import type { SourceNodes } from './worker-chatRequest'
 
 export interface ChatSession {
   id?: number
@@ -33,6 +34,7 @@ export interface ChatHistory {
       source: string
     }
   }>
+  relevantNews?: Array<SourceNodes>
 }
 
 export class MySubClassedDexie extends Dexie {

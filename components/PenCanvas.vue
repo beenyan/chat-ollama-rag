@@ -21,6 +21,8 @@ const canvasMouseDown = (event: HTMLElementEventMap['mousedown']) => {
 }
 
 const MouseUp = (_: HTMLElementEventMap['mouseup']) => {
+    if (mouseEnter.value === false) return
+
     mouseEnter.value = false
     if (!canvas.value) return
 
@@ -98,6 +100,15 @@ const render = () => {
 }
 
 requestAnimationFrame(render)
+
+watch(
+    () => prop.pen,
+    () => {
+        if (prop.pen !== null || !canvas.value || !context.value) return
+        context.value.clearRect(0, 0, canvas.value.width, canvas.value.height)
+    }
+)
+
 onMounted(() => {
     if (info.value) infoInverse(info.value)
     context.value = canvas.value?.getContext('2d') ?? null
@@ -108,11 +119,8 @@ onMounted(() => {
     setTimeout(resizeCanvas, 1000)
 })
 
-watch(
-    () => prop.pen,
-    () => {
-        if (prop.pen !== null || !canvas.value || !context.value) return
-        context.value.clearRect(0, 0, canvas.value.width, canvas.value.height)
-    }
-)
+onUnmounted(() => {
+    window.removeEventListener('mouseup', MouseUp)
+    window.removeEventListener('resize', resizeCanvas)
+})
 </script>

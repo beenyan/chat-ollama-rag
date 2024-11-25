@@ -152,6 +152,7 @@ const fetch = async () => {
     p.max,
   ]) as never[]
   data.value.datasets[1].backgroundColor = backgroundColor as any as string
+  data.value.datasets[2].backgroundColor = "#BFECFF"
 
   const newsAmountMap = newsFetch.value.map(x => +new Date(format(new Date(x.date), "yyy-MM-d"))).reduce((map, item) => {
     const currentCount = (map.get(item) || 0) + 1
@@ -228,6 +229,7 @@ watch(
 
     const dates = dataFilter().labels
     const news = Array.from({ length: idx[1] - idx[0] }, (_, i) => i + idx[0]).flatMap(index => newsFromDate(new Date(dates[index] as string)))
+    console.log(newsCanvasInfo.value?.rect)
 
     emit("selectNews", news)
   }

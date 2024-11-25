@@ -85,6 +85,7 @@ useMutationObserver(messageListEl, useThrottleFn((e: MutationRecord[]) => {
 async function loadChatHistory(sessionId?: number) {
   if (typeof sessionId === 'number' && sessionId > 0) {
     const res = await clientDB.chatHistories.where('sessionId').equals(sessionId).sortBy('id')
+
     return res.slice(-limitHistorySize.value).map(el => {
       return {
         id: el.id,
@@ -94,7 +95,8 @@ async function loadChatHistory(sessionId?: number) {
         startTime: el.startTime || 0,
         endTime: el.endTime || 0,
         type: el.canceled ? 'canceled' : (el.failed ? 'error' : undefined),
-        relevantDocs: el.relevantDocs
+        relevantDocs: el.relevantDocs,
+        relevantNews: el.relevantNews
       } as const
     })
   }
@@ -170,7 +172,7 @@ onReceivedMessage(data => {
 
   switch (data.type) {
     case 'error':
-      updateMessage(data, { id: data.id, content: data.message, type: 'error' })
+      updateMessage(data, { id: data.id, content: data.message, type: 'error', relevantNews: data.data?.relevantNews })
       break
     case 'message':
       if (sendingCount.value === 0) sendingCount.value += 1
