@@ -307,7 +307,7 @@ async function saveMessage(data: Omit<ChatHistory, 'sessionId'>) {
     </div>
     <div class="shrink-0 pt-4 px-4 border-t border-gray-200 dark:border-gray-800">
       <ChatInputBox ref="chatInputBoxRef"
-                    :disabled="models.length === 0" :loading="sendingCount > 0"
+                    :loading="sendingCount > 0"
                     @submit="onSend" @stop="onAbortChat">
         <div class="text-muted flex">
           <div class="mr-4">

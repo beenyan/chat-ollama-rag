@@ -19,12 +19,14 @@ export function useCreateChatSession() {
 
     // set default model
     await loadModels()
-    if (chatModels.value.length === 0) {
-      toast.add({ title: t('chat.noModelFound'), description: t('chat.noModelFoundDesc'), color: 'red' })
-    } else {
-      const availableModels = baseData.models.filter(m => chatModels.value.some(cm => cm.value === m))
-      baseData.models = availableModels
-    }
+    // if (chatModels.value.length === 0) {
+    //   toast.add({ title: t('chat.noModelFound'), description: t('chat.noModelFoundDesc'), color: 'red' })
+    // } else {
+    //   const availableModels = baseData.models.filter(m => chatModels.value.some(cm => cm.value === m))
+    //   baseData.models = availableModels
+    // }
+    const availableModels = baseData.models.filter(m => chatModels.value.some(cm => cm.value === m))
+    baseData.models = availableModels
 
     const id = await clientDB.chatSessions.add(baseData)
     return { ...baseData, id, count: 0 }
