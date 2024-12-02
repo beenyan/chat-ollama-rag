@@ -7,14 +7,12 @@ import { type ChatBoxFormData } from '@/components/ChatInputBox.vue'
 import { type ChatSessionSettings } from '~/pages/chat/index.vue'
 import { ChatSettings } from '#components'
 import type { ChatMessage } from '~/types/chat'
-import type { Stock } from "@prisma/client"
 
 type Instruction = Awaited<ReturnType<typeof loadOllamaInstructions>>[number]
 
 const props = defineProps<{
   news?: Array<News>,
   sessionId?: number,
-  stock: Stock
 }>()
 
 const emits = defineEmits<{

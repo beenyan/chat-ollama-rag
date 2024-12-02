@@ -1,3 +1,5 @@
+import type { SourceNodes } from '~/server/api/query/summary/index.post'
+
 export interface ChatMessage {
   id?: number
   role: 'system' | 'assistant' | 'user'

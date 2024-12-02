@@ -2,25 +2,11 @@ import type { SetRequired } from 'type-fest'
 import type { ChatMessage } from '~/types/chat'
 import type { clientDB, ChatHistory } from '~/composables/clientDB'
 import { type News } from '~/types/news'
+import type { ResponseData } from '~/server/api/query/summary/index.post'
 
 type RelevantDocument = Required<ChatHistory>['relevantDocs'][number]
 type ResponseRelevantDocument = { type: 'relevant_documents', relevant_documents: RelevantDocument[] }
 type ResponseMessage = { message: { role: string, content: string } }
-
-export interface SourceNodes {
-  metadata: {
-    headline: String,
-    author: String,
-    time: String
-  }
-  text: String
-  score: number
-}
-
-interface ResponseData {
-  source_nodes: Array<SourceNodes>,
-  response: string
-}
 
 interface RequestData {
   sessionId: number
@@ -79,17 +65,17 @@ function parseModelValue(val: string) {
 }
 
 async function fetchQuerySummary(text: string, news: Array<News>) {
-  const url = `http://140.125.45.129:5000/api/query/summary?text=${text}`
-  const body = JSON.stringify({
-    source_nodes: news.map(news => NewsToSourceNode(news))
-  })
-  const response = await fetch(url, {
+  const url = news.length === 0 ? `/api/query?text=${text}` : `/api/query/summary?text=${text}`
+  const body = JSON.stringify({ source_nodes: news.map(news => NewsToSourceNode(news)) })
+  const options = {
     method: 'POST',
     body,
     headers: { 'Content-Type': 'application/json' },
-  })
+  }
+  const response = await fetch(url, options)
+  const data = await response.json()
 
-  return await response.json() as ResponseData
+  return data as ResponseData
 }
 
 async function chatRequestCustom(uid: number, data: BackendRequestData) {

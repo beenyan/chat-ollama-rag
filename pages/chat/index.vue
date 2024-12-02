@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import type { ComponentInstance } from 'vue'
 import ChatSessionList from '~/components/ChatSessionList.vue'
-import Chat from '~/components/Chat.vue'
 import type { ChatMessage } from '@/types/chat'
+import NewsChat from '~/components/NewsChat.vue'
 
 export interface ChatSessionSettings extends Partial<Omit<ChatSession, 'id' | 'createTime'>> { }
 
 const { t } = useI18n()
 const chatSessionListRef = shallowRef<ComponentInstance<typeof ChatSessionList>>()
-const chatRef = shallowRef<ComponentInstance<typeof Chat>>()
 const slideover = useSlideover()
 const { isMobile } = useMediaBreakpoints()
 
@@ -69,15 +68,15 @@ function onOpenSideMenu() {
                        class="shrink-0 w-[var(--chat-side-width)] hidden md:block"
                        @select="onChangeChatSession" />
     </ClientOnly>
-    <Chat ref="chatRef" v-if="sessionId > 0"
-          class="flex-1 md:px-4 pb-4 box-border w-full md:w-[calc(100%-var(--chat-side-width))]"
-          :session-id="sessionId"
-          @change-settings="onChangeSettings"
-          @message="onMessage">
+    <NewsChat v-if="sessionId > 0"
+              class="flex-1 md:px-4 pb-4 box-border w-full md:w-[calc(100%-var(--chat-side-width))]"
+              :session-id="sessionId"
+              @change-settings="onChangeSettings"
+              @message="onMessage">
       <template #left-menu-btn>
         <UButton icon="i-material-symbols-lists-rounded" color="gray" class="mr-4 md:hidden rotate-180" @click="onOpenSideMenu"></UButton>
       </template>
-    </Chat>
+    </NewsChat>
     <div v-else class="grow h-full flex justify-center items-center">
       <UButton icon="i-material-symbols-add" color="primary" square @click="onNewChat">{{ t("chat.newChat") }}</UButton>
     </div>

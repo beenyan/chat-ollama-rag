@@ -21,9 +21,9 @@
 
     <Floating @click="openChatDialog">
       <UAvatar
-               :chip-color="selectNews.length ? 'red' : 'gray'"
                :chip-text="selectNews.length"
-               :class="selectNews.length ? 'cursor-pointer' : 'cursor-not-allowed'"
+               chip-color="red"
+               class="cursor-pointer"
                icon="i-iconoir-chat-lines"
                size="lg" />
     </Floating>
@@ -105,6 +105,7 @@ function onMessage(data: ChatMessage | null) {
     title: data.content.slice(0, 20),
     updateTime: data.endTime || data.startTime,
   })
+
   if (latestMessageId.value !== data.id) {
     latestMessageId.value = data.id!
   }
@@ -131,8 +132,6 @@ function onOpenSideMenu() {
 }
 
 const openChatDialog = async () => {
-  if (!selectNews.value.length) return
-
   // const data = await createChatSession({
   //   title: `${format(new Date(), "yyy年MM月d日")} - ${props.news?.length} News`
   // })

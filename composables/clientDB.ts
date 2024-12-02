@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie'
-import type { SourceNodes } from './worker-chatRequest'
+import type { SourceNodes } from '~/server/api/query/summary/index.post'
 
 export interface ChatSession {
   id?: number
