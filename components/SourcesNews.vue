@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SourceNodes } from '~/server/api/query/summary/index.post'
+import type { SourceNodes } from '~/types/query'
 
 defineProps<{
   relevant_news: Array<SourceNodes>

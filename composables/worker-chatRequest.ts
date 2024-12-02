@@ -2,7 +2,7 @@ import type { SetRequired } from 'type-fest'
 import type { ChatMessage } from '~/types/chat'
 import type { clientDB, ChatHistory } from '~/composables/clientDB'
 import { type News } from '~/types/news'
-import type { ResponseData } from '~/server/api/query/summary/index.post'
+import type { ResponseData } from '~/types/query'
 
 type RelevantDocument = Required<ChatHistory>['relevantDocs'][number]
 type ResponseRelevantDocument = { type: 'relevant_documents', relevant_documents: RelevantDocument[] }
@@ -65,14 +65,23 @@ function parseModelValue(val: string) {
 }
 
 async function fetchQuerySummary(text: string, news: Array<News>) {
-  const url = `http://140.125.45.129:5000/api/query${news.length === 0 ? `?text=${text}` : `/summary?text=${text}`}`
-  const body = JSON.stringify({ source_nodes: news.map(news => NewsToSourceNode(news)) })
-  const options = {
-    method: 'POST',
-    body,
-    headers: { 'Content-Type': 'application/json' },
+  let req
+  if (news.length > 0) {
+    const body = JSON.stringify({ source_nodes: news.map(news => NewsToSourceNode(news)) })
+    const options = {
+      method: 'POST',
+      body,
+      headers: { 'Content-Type': 'application/json' },
+    }
+    req = fetch(`http://140.125.45.129:5000/api/query/summary?text=${text}`, options)
+  } else {
+    const options = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    }
+    req = fetch(`http://140.125.45.129:5000/api/query?text=${text}`, options)
   }
-  const response = await fetch(url, options)
+  const response = await req
   const data = await response.json()
 
   return data as ResponseData
