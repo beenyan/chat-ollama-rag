@@ -65,7 +65,7 @@ function parseModelValue(val: string) {
 }
 
 async function fetchQuerySummary(text: string, news: Array<News>) {
-  const url = news.length === 0 ? `/api/query?text=${text}` : `/api/query/summary?text=${text}`
+  const url = `http://140.125.45.129:5000/api/query${news.length === 0 ? `?text=${text}` : `/summary?text=${text}`}`
   const body = JSON.stringify({ source_nodes: news.map(news => NewsToSourceNode(news)) })
   const options = {
     method: 'POST',
