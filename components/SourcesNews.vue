@@ -13,7 +13,6 @@ const scoreCorrection = (score: number) => {
 
 <template>
   <div class="mt-4 pt-4" v-if="relevant_news?.length > 0 && Object.keys(relevant_news[0].metadata).length">
-    {{ relevant_news }}
     <h3 class="flex flex-row items-center font-bold gap-1 text-lg mb-2">
       <UIcon name="i-heroicons-newspaper" /> Sources
     </h3>
