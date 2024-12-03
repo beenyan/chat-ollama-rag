@@ -31,7 +31,7 @@ const scoreCorrection = (score: number) => {
 
           <template #panel>
             <div class="max-h-[40vh] overflow-auto">
-              <pre class="p-4 text-gray-500 text-sm whitespace-break-spaces" v-text="relevant_news.text" />
+              <pre class="p-4 text-sm whitespace-break-spaces" v-text="relevant_news.text" />
             </div>
           </template>
         </UPopover>

@@ -14,7 +14,6 @@ watch(() => route.path, () => {
     <div class="flex items-center justify-between max-w-6xl mx-auto px-4 box-border h-[var(--top-height)]">
       <h1 class="flex flex-row items-center mr-2">
         <TheLogo class="w-[32px] h-[32px] mr-2" />
-        <span class="text-primary font-semibold text-lg">{{ $config.public.appName }}</span>
       </h1>
       <div class="hidden md:block">
         <UHorizontalNavigation :links="[links]">
@@ -27,10 +26,6 @@ watch(() => route.path, () => {
         <div class="mx-2">
           <ColorMode />
         </div>
-        <ULink to="https://github.com/sugarforever/chat-ollama"
-               target="_blank"
-               class="i-mdi-github text-2xl ml-2 mr-4"></ULink>
-        <Auth />
       </div>
       <div class="md:hidden">
         <UPopover v-model:open="open" overlay :ui="{ width: 'w-[100vw] !translate-y-[var(--top-height)]', overlay: { background: '!bg-transparent' } }">

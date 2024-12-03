@@ -14,14 +14,13 @@
     "dark": "Dark"
   },
   "home": {
-    "welcome": "Welcome to ChatOllama",
-    "description": "ChatOllama is a web application that allows you to manage your <a class=\"text-primary font-bold\" href=\"https://ollama.ai\" target=\"_blank\">Ollama</a> server and chat with the served LLMs from anywhere in the world.",
+    "title": "Financial Information Retrieval and Generation Models Based on Retrieval-Augmented Generation and Knowledge Graphs",
+    "description": "本專題《基於檢索增強生成與知識圖譜的財經資訊檢索與生成模型》，希望經由新聞相關資訊檢索來提升模型可靠性及生成內容的準確度，並降低大型語言模型（LLM）回答的錯誤率。",
     "quickStart": "Quick Start",
-    "step1": "Make sure your Ollama server is publicly accessible. If required, you can use <a class=\"text-primary\" href=\"https://ngrok.com/\" target=\"_blank\">ngrok</a> to expose your Ollama server in your local machine to the public.",
-    "step2": "Go to <a class=\"text-primary\" href=\"/settings\"> @:menu.settings </a> to set the host of your Ollama server.",
-    "step3": "Start enjoying the excellence of Ollama.",
-    "step3_1": "Models management(list / download / delete) - <a class=\"text-primary\" href=\"/models\">Link</a>",
-    "step3_2": "Chat with the models - <a class=\"text-primary\" href=\"/chat\">Link</a>"
+    "step1": "從 Menu 選出感興趣的股票代號。",
+    "step2": "選擇股票與日期區間。",
+    "step3": " 選擇新聞",
+    "step4": "詢問新聞相關問題"
   },
   "models": {
     "family": "Family",

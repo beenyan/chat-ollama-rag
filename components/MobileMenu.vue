@@ -18,10 +18,10 @@ const menus = useMenus()
       <div class="mr-4">
         <ColorMode />
       </div>
-      <ULink to="https://github.com/sugarforever/chat-ollama"
+      <!-- <ULink to="https://github.com/sugarforever/chat-ollama"
              target="_blank"
              class="i-mdi-github text-2xl ml-2 mr-4"></ULink>
-      <Auth class="ml-auto" />
+      <Auth class="ml-auto" /> -->
     </div>
   </div>
 </template>
